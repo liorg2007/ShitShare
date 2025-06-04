@@ -1,0 +1,12 @@
+# Ignore uploads directory
+uploads/
+
+# Ignore node_modules and related
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+package-lock.json
+yarn.lock
+.pnpm-lock.yaml
