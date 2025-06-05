@@ -1,0 +1,372 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
+    min-height: 100vh;
+    padding: 15px;
+    color: #2c3e50;
+    overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    max-width: 420px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(255,255,255,0.2);
+    overflow: hidden;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 30px 60px rgba(0,0,0,0.15),
+        0 0 0 1px rgba(255,255,255,0.3);
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 25px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.header .emoji {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 15px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: -0.5px;
+}
+
+.header p {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.content {
+    padding: 35px 25px;
+}
+
+.success {
+    text-align: center;
+    direction: rtl;
+    padding: 20px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border-radius: 16px;
+    margin: 20px 0;
+    border: none;
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+    font-weight: 600;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.gallery-status {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    padding: 18px;
+    border-radius: 16px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+}
+
+.access-denied {
+    text-align: center;
+    padding: 25px 20px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border-radius: 16px;
+    margin: 20px 0;
+    font-weight: 600;
+    box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+    line-height: 1.6;
+}
+
+.camera-section {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.camera-button {
+    width: 100%;
+    padding: 22px 20px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 15px 0;
+    box-shadow: 
+        0 8px 25px rgba(255, 107, 107, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.camera-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.camera-button:hover::before {
+    left: 100%;
+}
+
+.camera-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 35px rgba(255, 107, 107, 0.5),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.camera-button:active {
+    transform: translateY(-1px);
+}
+
+.preview-container {
+    margin: 25px 0;
+    text-align: center;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.preview-image {
+    max-width: 100%;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.preview-image:hover {
+    transform: scale(1.02);
+}
+
+.upload-button {
+    width: 100%;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #00d2ff, #3a47d5);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 15px 0;
+    box-shadow: 
+        0 8px 25px rgba(58, 71, 213, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.upload-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 12px 35px rgba(58, 71, 213, 0.5),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.upload-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.file-input {
+    display: none;
+}
+
+.gallery-link {
+    display: block;
+    width: 100%;
+    padding: 22px 20px;
+    background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+    color: white;
+    text-decoration: none;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    margin: 20px 0;
+    box-shadow: 
+        0 8px 25px rgba(86, 171, 47, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.gallery-link:hover::before {
+    left: 100%;
+}
+
+.gallery-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 35px rgba(86, 171, 47, 0.5),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.info {
+    text-align: right;
+    direction: rtl;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    margin: 25px 0;
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.info strong {
+    color: #d0d5d9;
+    font-weight: 700;
+}
+
+.reset-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px 0;
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.reset-link:hover {
+    background: rgba(231, 76, 60, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        max-width: 100%;
+        border-radius: 20px;
+    }
+    
+    .header {
+        padding: 35px 20px;
+    }
+    
+    .content {
+        padding: 30px 20px;
+    }
+    
+    .header h1 {
+        font-size: 24px;
+    }
+    
+    .camera-button {
+        font-size: 16px;
+        padding: 20px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: rgba(45, 52, 67, 0.95);
+        color: #ecf0f1;
+    }
+    
+    .info {
+        background: linear-gradient(135deg, rgba(45, 52, 67, 0.9), rgba(45, 52, 67, 0.7));
+        color: #ecf0f1;
+    }
+}
