@@ -72,17 +72,11 @@ const galleryTemplate = (imageFiles) => `
     <div class="header">
         <a href="/" class="back-button">← Back</a>
         <h1>📷 Photo Gallery</h1>
-        <div class="count">${imageFiles.length} photos shared</div>
+        <div class="count">Loading...</div>
     </div>
     
     <div class="gallery">
-        ${imageFiles.length > 0 ? imageFiles.map(file => 
-          `<div class="image-item">
-             <img src="/uploads/${file}" alt="Gallery Photo" loading="lazy">
-           </div>`
-        ).join('') : 
-        '<div class="empty-gallery"><h3>📸 No photos yet!</h3><p>Upload more photos to grow the gallery!</p></div>'
-        }
+        <!-- Images will be loaded dynamically via JavaScript -->
     </div>
     
     <div id="imageModal" class="modal" onclick="closeModal()">

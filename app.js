@@ -109,17 +109,40 @@ app.post('/upload', (req, res) => {
 });
 
 app.get('/gallery', requireUpload, (req, res) => {
+  res.send(galleryTemplate([]));  // Send empty template, JavaScript will load images
+});
+
+// API endpoint for paginated gallery data
+app.get('/gallery/data', requireUpload, (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 12; // Number of images per page - smaller batch for better UX
+  
   fs.readdir(uploadsDir, (err, files) => {
     if (err) {
-      return res.status(500).send('Error reading gallery');
+      return res.status(500).json({ error: 'Error reading gallery' });
     }
     
     const imageFiles = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
       return ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
+    }).sort((a, b) => {
+      // Sort by timestamp in filename, most recent first
+      const timestampA = parseInt(a.split('-')[0]);
+      const timestampB = parseInt(b.split('-')[0]);
+      return timestampB - timestampA;
     });
     
-    res.send(galleryTemplate(imageFiles));
+    const totalImages = imageFiles.length;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedImages = imageFiles.slice(startIndex, endIndex);
+    
+    res.json({
+      images: paginatedImages,
+      currentPage: page,
+      totalPages: Math.ceil(totalImages / limit),
+      totalImages: totalImages
+    });
   });
 });
 
@@ -130,6 +153,41 @@ app.get('/reset', (req, res) => {
     }
     res.redirect('/');
   });
+});
+
+// Paginated API endpoint for gallery images
+app.get('/api/gallery', requireUpload, (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 20;
+
+    fs.readdir(uploadsDir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error reading gallery' });
+        }
+        
+        const imageFiles = files.filter(file => {
+            const ext = path.extname(file).toLowerCase();
+            return ['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext);
+        }).sort((a, b) => {
+            // Sort by timestamp in filename (newest first)
+            const timeA = a.split('-')[0];
+            const timeB = b.split('-')[0];
+            return timeB - timeA;
+        });
+        
+        const totalImages = imageFiles.length;
+        const totalPages = Math.ceil(totalImages / perPage);
+        const startIndex = (page - 1) * perPage;
+        const endIndex = startIndex + perPage;
+        const paginatedImages = imageFiles.slice(startIndex, endIndex);
+        
+        res.json({
+            images: paginatedImages,
+            currentPage: page,
+            totalPages,
+            totalImages
+        });
+    });
 });
 
 // Error handling middleware
