@@ -1,4 +1,4 @@
-// Enhanced gallery functionality with better UX, lazy loading, and download feature
+// Enhanced gallery functionality with better UX and lazy loading
 document.addEventListener('DOMContentLoaded', function() {
     const gallery = document.querySelector('.gallery');
     const modal = document.getElementById('imageModal');
@@ -63,22 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
             img.loading = 'lazy';
             img.src = `/uploads/${imageName}`;
             img.alt = 'Gallery Photo';
-            img.dataset.filename = imageName;
-            
-            // Create download button
-            const downloadBtn = document.createElement('button');
-            downloadBtn.className = 'download-btn';
-            downloadBtn.innerHTML = '⬇️';
-            downloadBtn.title = 'Download Image';
-            downloadBtn.onclick = (e) => {
-                e.stopPropagation();
-                downloadImage(img.src, imageName);
-            };
-            
-            // Create image overlay container
-            const overlay = document.createElement('div');
-            overlay.className = 'image-overlay';
-            overlay.appendChild(downloadBtn);
             
             img.onload = () => {
                 div.classList.remove('loading');
@@ -87,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             
             div.appendChild(img);
-            div.appendChild(overlay);
             fragment.appendChild(div);
         });
         
@@ -101,66 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Download functionality
-    async function downloadImage(imageUrl, filename) {
-        try {
-            // Show loading state
-            const downloadBtn = event.target;
-            const originalContent = downloadBtn.innerHTML;
-            downloadBtn.innerHTML = '⏳';
-            downloadBtn.disabled = true;
-            
-            // Fetch the image
-            const response = await fetch(imageUrl);
-            if (!response.ok) throw new Error('Failed to fetch image');
-            
-            const blob = await response.blob();
-            
-            // Create download link
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            
-            // Generate a user-friendly filename
-            const fileExtension = filename.split('.').pop();
-            const timestamp = filename.split('-')[0];
-            const date = new Date(parseInt(timestamp));
-            const formattedDate = date.toISOString().slice(0, 10);
-            a.download = `picshare-${formattedDate}-${Math.random().toString(36).substr(2, 5)}.${fileExtension}`;
-            
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-            
-            // Show success feedback
-            downloadBtn.innerHTML = '✅';
-            setTimeout(() => {
-                downloadBtn.innerHTML = originalContent;
-                downloadBtn.disabled = false;
-            }, 1500);
-            
-        } catch (error) {
-            console.error('Download failed:', error);
-            
-            // Show error feedback
-            const downloadBtn = event.target;
-            downloadBtn.innerHTML = '❌';
-            setTimeout(() => {
-                downloadBtn.innerHTML = '⬇️';
-                downloadBtn.disabled = false;
-            }, 1500);
-            
-            showErrorMessage('Failed to download image. Please try again.');
-        }
-    }
+
 
     // UI Helper Functions
     function setupImageInteraction(img) {
         img.addEventListener('click', function(e) {
             e.stopPropagation();
-            showModal(this.src || this.dataset.src, this.dataset.filename);
+            showModal(this.src || this.dataset.src);
         });
     }
 
@@ -206,33 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Modal Functions
-    function showModal(src, filename) {
+    function showModal(src) {
         modalImg.src = src;
-        modalImg.dataset.filename = filename;
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
-        
-        // Add download button to modal if it doesn't exist
-        let modalDownloadBtn = modal.querySelector('.modal-download-btn');
-        if (!modalDownloadBtn) {
-            modalDownloadBtn = document.createElement('button');
-            modalDownloadBtn.className = 'modal-download-btn';
-            modalDownloadBtn.innerHTML = '⬇️ Download';
-            modalDownloadBtn.onclick = (e) => {
-                e.stopPropagation();
-                downloadImage(src, filename);
-            };
-            
-            const modalContent = modal.querySelector('.modal-content');
-            modalContent.appendChild(modalDownloadBtn);
-        } else {
-            // Update the download button for the current image
-            modalDownloadBtn.onclick = (e) => {
-                e.stopPropagation();
-                downloadImage(src, filename);
-            };
-        }
-        
         requestAnimationFrame(() => {
             modal.style.opacity = '1';
         });
@@ -250,22 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             closeModal();
-        }
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-        if (modal.style.display === 'block') {
-            if (e.key === 'Escape') {
-                closeModal();
-            } else if (e.key === 'd' || e.key === 'D') {
-                // Download current modal image with 'd' key
-                const currentSrc = modalImg.src;
-                const currentFilename = modalImg.dataset.filename;
-                if (currentSrc && currentFilename) {
-                    downloadImage(currentSrc, currentFilename);
-                }
-            }
         }
     });
 
